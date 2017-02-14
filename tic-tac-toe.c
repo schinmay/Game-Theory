@@ -12,7 +12,11 @@ int main()
 	while(1)	
 	{
 		scanf("%c",&turn);
-		if(turn!='y'&&turn!='Y'&&turn!='n'&&turn!='N')
+		if(turn=='\n')
+		{
+			continue;
+		}		
+		else if(turn!='y'&&turn!='Y'&&turn!='n'&&turn!='N')
 		{
 			printf("Reply with a Y/y or N/n\n");
 		}
@@ -38,10 +42,31 @@ int main()
 		}		
 		if(move==1)
 		{
-			value = minimax(box,n,1);
-			box[value[1]]=1;
-			move=-1;
-			printf("After Computer's move:\n");
+			for(int i=0;i<9;i++)
+			{
+				if(box[i]==0)
+				{
+					box[i]=1;
+					if(game_over(box)==1)
+					{
+						printf("After Computer's move:\n");						
+						game_print(box);
+						n=0;
+						break;
+					}
+					else
+					{
+						box[i]=0;	
+					}			
+				}
+			}
+			if(n!=0)
+			{		
+				value = minimax(box,n,1);
+				box[value[1]]=1;
+				move=-1;
+				printf("After Computer's move:\n");
+			}
 		}
 		else if(move==-1)
 		{
@@ -61,6 +86,10 @@ int main()
 			box[index-1]=-1;
 			move=1;			
 			printf("After your move :\n");
+		}
+		if(n==0)
+		{
+			break;
 		}
 		game_print(box);	
 		n--;
