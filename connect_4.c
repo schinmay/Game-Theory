@@ -21,7 +21,7 @@ int main()
 		}
 	}
 	char turn;
-	printf("You are Mr.R(Red), Computer is Mr.Y(Yellow)\nSpecify if you want to go first or not? Y/N\n");
+	printf("You are Mr.R(Red), Computer is Mr.Y(Yellow)\nBottom left is (1,1)\nSpecify if you want to go first or not? Y/N\n");
 	while(1)	
 	{
 		scanf("%c",&turn);
@@ -46,7 +46,6 @@ int main()
 			break;
 		}
 	}
-	printf("Bottom left is (1,1)\n");
 	while(n>0)
 	{
 		if(game_over(box)==1||game_over(box)==-1)
@@ -125,7 +124,7 @@ int* minimax(int* box[], int n, int flag)
 		value[2]=0;
 		return value;
 	}
-	else if(count==1)
+	else if(count==10)
 	{
 		value[0]=heuristic(box);
 		value[1]=0;
@@ -138,7 +137,7 @@ int* minimax(int* box[], int n, int flag)
 		{
 			for(j=0;j<7;j++)
 			{
-				if((*(*(box+i)+j))==0 && (i==0||((*(*(box+(i-1))+j))!=0)))
+				if((i==0||((*(*(box+(i-1))+j))!=0)&&(*(*(box+i)+j))==0))
 				{
 					*(*(box+i)+j)=1;
 					count++;
@@ -213,10 +212,6 @@ int heuristic(int * box[])
 			{
 				countc++;
 			}
-			if(count1==4)
-			{
-				return 100;
-			}
 			count1=0;
 		}
 	}
@@ -241,10 +236,6 @@ int heuristic(int * box[])
 			if((count1==1)&&(((i<6)&&((*(*(box+i)+j))==0))||((k!=0)&&((*(*(box+(k-1))+j))==0))))
 			{
 				countc++;
-			}
-			if(count1==4)
-			{
-				return 100;
 			}
 			count1=0;
 		}
@@ -272,10 +263,6 @@ int heuristic(int * box[])
 			{
 				countc++;
 			}
-			if(count1==4)
-			{
-				return 100;
-			}
 			count1=0;
 		}
 	}
@@ -302,10 +289,6 @@ int heuristic(int * box[])
 			{
 				countc++;
 			}
-			if(count1==4)
-			{
-				return 100;
-			}
 			count1=0;
 		}
 	}
@@ -331,10 +314,6 @@ int heuristic(int * box[])
 			{
 				countc--;
 			}
-			if(count1==4)
-			{
-				return -100;
-			}
 			count1=0;
 		}
 	}
@@ -359,10 +338,6 @@ int heuristic(int * box[])
 			if((count1==1)&&(((i<6)&&((*(*(box+i)+j))==0))||((k!=0)&&((*(*(box+(k-1))+j))==0))))
 			{
 				countc--;
-			}
-			if(count1==4)
-			{
-				return -100;
 			}
 			count1=0;
 		}
@@ -390,10 +365,6 @@ int heuristic(int * box[])
 			{
 				countc--;
 			}
-			if(count1==4)
-			{
-				return -100;
-			}
 			count1=0;
 		}
 	}
@@ -420,10 +391,6 @@ int heuristic(int * box[])
 			{
 				countc--;
 			}
-			if(count1==4)
-			{
-				return -100;
-			}
 			count1=0;
 		}
 	}
@@ -432,18 +399,146 @@ int heuristic(int * box[])
 }
 int game_over(int * box[])
 {
-	int value = heuristic(box);
-	if(value==100)
+	int i,j,count1;
+	for(i=0;i<6;i++)
 	{
-		return 1;
+		for(j=0;j<7;j++)
+		{
+			int k=j;
+			while((j<7)&&(*(*(box+i)+j)>0))
+			{
+				count1++;
+				j++;
+			}
+			if(count1==4)
+			{
+				return 1;
+			}
+			count1=0;
+		}
 	}
-	else if(value==-100)
+	for(i=0;i<6;i++)
 	{
-		return -1;
+		for(j=0;j<7;j++)
+		{
+			int k=i;
+			while((i<6)&&(*(*(box+i)+j)>0))
+			{
+				count1++;
+				i++;
+			}
+			if(count1==4)
+			{
+				return 1;
+			}
+			count1=0;
+		}
 	}
-	else
+	for(i=0;i<6;i++)
 	{
-		return 0;
+		for(j=0;j<7;j++)
+		{
+			int k=i,l=j;
+			while((i<6)&&(j<7)&&(*(*(box+i)+j)>0))
+			{
+				count1++;
+				i++;
+				j++;
+			}
+			if(count1==4)
+			{
+				return 1;
+			}
+			count1=0;
+		}
+	}
+	for(i=0;i<6;i++)
+	{
+		for(j=0;j<7;j++)
+		{
+			int k=i,l=j;
+			while((i<6)&&(j>=0)&&(*(*(box+i)+j)>0))
+			{
+				count1++;
+				i++;
+				j--;
+			}
+			if(count1==4)
+			{
+				return 1;
+			}
+			count1=0;
+		}
+	}
+	for(i=0;i<6;i++)
+	{
+		for(j=0;j<7;j++)
+		{
+			int k=j;
+			while((j<7)&&(*(*(box+i)+j)<0))
+			{
+				count1++;
+				j++;
+			}
+			if(count1==4)
+			{
+				return -1;
+			}
+			count1=0;
+		}
+	}
+	for(i=0;i<6;i++)
+	{
+		for(j=0;j<7;j++)
+		{
+			int k=i;
+			while((i<6)&&(*(*(box+i)+j)<0))
+			{
+				count1++;
+				i++;
+			}
+			if(count1==4)
+			{
+				return -1;
+			}
+			count1=0;
+		}
+	}
+	for(i=0;i<6;i++)
+	{
+		for(j=0;j<7;j++)
+		{
+			int k=i,l=j;
+			while((i<6)&&(j<7)&&(*(*(box+i)+j)<0))
+			{
+				count1++;
+				i++;
+				j++;
+			}
+			if(count1==4)
+			{
+				return -1;
+			}
+			count1=0;
+		}
+	}
+	for(i=0;i<6;i++)
+	{
+		for(j=0;j<7;j++)
+		{
+			int k=i,l=j;
+			while((i<6)&&(j>=0)&&(*(*(box+i)+j)<0))
+			{
+				count1++;
+				i++;
+				j--;
+			}
+			if(count1==4)
+			{
+				return -1;
+			}
+			count1=0;
+		}
 	}
 }
 void game_print(int * box[])
