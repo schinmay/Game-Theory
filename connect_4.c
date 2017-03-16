@@ -128,7 +128,7 @@ int* minimax(int* box[], int n, int flag, int count)
 		value[2]=0;
 		return value;
 	}
-	else if(count==5)
+	else if(count==8)
 	{
 		value[0]=heuristic(box);
 		value[1]=0;
@@ -378,7 +378,7 @@ int heuristic(int * box[])
 }
 int game_over(int * box[])
 {
-	int i,j,count1;
+	int i,j,count1=0;
 	for(i=0;i<6;i++)
 	{
 		for(j=0;j<7;j++)
