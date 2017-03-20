@@ -128,7 +128,7 @@ int* minimax(int* box[], int n, int flag, int count)
 		value[2]=0;
 		return value;
 	}
-	else if(count==8)
+	else if(count==7)
 	{
 		value[0]=heuristic(box);
 		value[1]=0;
@@ -203,7 +203,7 @@ int heuristic(int * box[])
 			int k=i,l=j;
 			if((*(*(box+i)+j))==0)
 			{
-				break;
+				continue;
 			}
 			else if((*(*(box+i)+j))>0)
 			{
@@ -386,7 +386,7 @@ int game_over(int * box[])
 			int k=i,l=j;
 			if((*(*(box+i)+j))==0)
 			{
-				break;
+				continue;
 			}
 			else if((*(*(box+i)+j))>0)
 			{
@@ -425,9 +425,6 @@ int game_over(int * box[])
 				count1=0;
 				i=k;
 				j=l;
-			}
-			else if((*(*(box+i)+j))<0)
-			{	
 				while((i<6)&&(j>=0)&&(*(*(box+i)+j)>0))
 				{
 					count1++;
@@ -441,6 +438,9 @@ int game_over(int * box[])
 				count1=0;
 				i=k;
 				j=l;
+			}
+			else if((*(*(box+i)+j))<0)
+			{	
 				while((j<7)&&(*(*(box+i)+j)<0))
 				{
 					count1++;
