@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-int* minimax(int* [], int, int, int);
+int* minimax(int* [], int, int, int, int, int);
 int heuristic(int* []);
 int game_over(int* []);
 void game_print(int* []);
 int main()
 {
-	int **box = (int **) malloc (6*(sizeof(int *))),i,j,n=42,row,col,move;
+	int **box = (int **) malloc (6*(sizeof(int *))),i,j,n=42,col,move;
 	int * value;
 	value = (int *) malloc (3*sizeof(int));
 	for(i=0;i<6;i++)
@@ -21,7 +21,7 @@ int main()
 		}
 	}
 	char turn;
-	printf("You are Mr.R(Red), Computer is Mr.Y(Yellow)\nBottom left is (1,1)\nSpecify if you want to go first or not? Y/N\n");
+	printf("You are Mr.R(Red), Computer is Mr.Y(Yellow)\nSpecify if you want to go first or not? Y/N\n");
 	while(1)	
 	{
 		scanf("%c",&turn);
@@ -54,7 +54,7 @@ int main()
 		}		
 		if(move==1)
 		{
-			value = minimax(box,n,1,0);
+			value = minimax(box,n,1,0,-1000,1000);
 			*(*(box+(value[1]))+(value[2]))=1;
 			move=-1;
 			printf("After Computer's move:\n");
@@ -63,26 +63,30 @@ int main()
 		{
 			while(1)
 			{
-				printf("Specify your location\n");				
-				scanf("%d,%d",&row,&col);
-				if( row>6 || col>7 )
+				printf("Specify Column\n");				
+				scanf("%d",&col);
+				if( col>6 )
 				{
 					printf("Out of Range\n");
-				}		
-				else if(*(*(box+(row-1))+(col-1))!=0)
-				{
-					printf("Already filled\n");
+					continue;
 				}
-				else if ((row!=1) && (*(*(box+(row-2))+(col-1))==0))
+				for(i=0;i<6;i++)
 				{
-					printf("The location below your entered location is empty\n");
+					if((*(*(box+i)+col))==0)
+					{
+						(*(*(box+i)+col))=-1;
+						break;
+					}
+					if(i==5)
+					{
+						printf("Whole column filled\n");
+					}
 				}
-				else
+				if(i!=6)
 				{
 					break;
 				}				
 			}
-			*(*(box+(row-1))+(col-1))=-1;
 			move=1;			
 			printf("After your move :\n");
 		}
@@ -103,7 +107,7 @@ int main()
 	}
 	return 0;
 }
-int* minimax(int* box[], int n, int flag, int count)
+int* minimax(int* box[], int n, int flag, int count, int alpha, int beta)
 {
 	int *value,i,j,index1,index2;
 	value = (int *) malloc (3*sizeof(int));	
@@ -147,7 +151,7 @@ int* minimax(int* box[], int n, int flag, int count)
 				{
 					*(*(box+i)+j)=1;
 					count++;
-					value = minimax(box,n-1,0,count);
+					value = minimax(box,n-1,0,count,alpha,beta);
 					*(*(box+i)+j)=0;
 					count--;
 					if(value[0]>max)
@@ -175,7 +179,7 @@ int* minimax(int* box[], int n, int flag, int count)
 				{
 					*(*(box+i)+j)=-1;
 					count++;
-					value = minimax(box,n-1,1,count);
+					value = minimax(box,n-1,1,count,alpha,beta);
 					*(*(box+i)+j)=0;
 					count--;
 					if(value[0]<min)
